@@ -56,7 +56,7 @@ public partial class TorreDeControlContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("estatus");
-            entity.Property(e => e.HoraEntrada).HasColumnName("hora_entrada");
+            entity.Property(e => e.HoraAterrizaje).HasColumnName("hora_aterrizaje");
             entity.Property(e => e.HoraSalida).HasColumnName("hora_salida");
             entity.Property(e => e.LimitePasajeros).HasColumnName("limite_pasajeros");
             entity.Property(e => e.LimitePesoKg).HasColumnName("limite_peso_kg");
