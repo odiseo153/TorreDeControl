@@ -4,7 +4,7 @@ namespace TorreDeControl.Ayudas
 {
 	public class Validar
 	{
-
+		
 		public static bool ValidarEstatus(string estatus,TorreDeControlContext cn)
 		{
 
@@ -19,5 +19,6 @@ namespace TorreDeControl.Ayudas
 
 			return valido;
 		}
+		
 	}
 }

@@ -4,7 +4,7 @@ namespace TorreDeControl.Ayudas
 {
 	public class Encontrar
 	{
-
+		
 		public bool EncontrarAvion(int IdAvion,TorreDeControlContext cn)
 		{
 			var existe = cn.Aviones.Where(x => x.IdAvion == IdAvion).FirstOrDefault();
@@ -28,10 +28,11 @@ namespace TorreDeControl.Ayudas
 
 		public bool EncontrarAeropuerto(int IdAeropuerto, TorreDeControlContext cn)
 		{
-			var existe = cn.Aeropuertos.Find(IdAeropuerto);
-			bool validar = existe == null ? true : false;
+			var existe = cn.Aeropuertos.Where(x => x.IdAeropuerto == IdAeropuerto).FirstOrDefault();
+			bool validar = existe != null ? true : false;
 
 			return validar;
 		}
+		
 	}
 }

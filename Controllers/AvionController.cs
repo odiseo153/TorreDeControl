@@ -10,6 +10,7 @@ namespace TorreDeControl.Controllers
 {
 	public class AvionController : Controller
 	{
+
 		private static TorreDeControlContext cn;
 		private Encontrar encontrador = new Encontrar();
 
@@ -74,15 +75,14 @@ namespace TorreDeControl.Controllers
 			var existeAvion = encontrador.EncontrarAvion(idAvion, cn);
 			var existePasajero = encontrador.EncontrarPasajero(IdPasajero, cn);
 
-			string mensaje = $"Pasajero Abordado en el avion con el ID: {idAvion}";
 
 			if (!existeAvion)
 			{
-				mensaje = $"No existe avion con el Id:{idAvion}";
+				return $"No existe avion con el Id:{idAvion}";
 			}
 			else if (!existePasajero)
 			{
-				mensaje = $"No existe pasajero con el Id: {IdPasajero}";
+				return $"No existe pasajero con el Id: {IdPasajero}";
 			}
 
 			var PasajerosEnAvion = cn.Pasajeros.Where(x=>x.IdAvion == idAvion);
@@ -90,17 +90,20 @@ namespace TorreDeControl.Controllers
 
 			if (PasajerosEnAvion.Count() >= Avion.LimitePasajeros)
 			{
-				mensaje = "El avion llego a su limite de pasajeros debe de buscar otro avion";
+				return "El avion llego a su limite de pasajeros debe de buscar otro avion";
 			}
 
 
 
             var pasajero = cn.Pasajeros.FirstOrDefault(x => x.IdPasajero == IdPasajero);
 
-			if(pasajero.IdAvion == idAvion) 
+			if(pasajero != null) 
 			{
-				mensaje = "El pasajero ya aborda ese avion";
-			}
+				if (pasajero.IdAvion == idAvion)
+				{
+					return "El pasajero ya aborda ese avion";
+				}
+			}	
 			else if(Avion.Estatus == "en vuelo")
 			{
 				return $"El avion con el Id: {idAvion} esta en vuelo no se puede montar al pasajero";			
@@ -113,7 +116,7 @@ namespace TorreDeControl.Controllers
 
 
 
-			return mensaje;
+			return $"Pasajero Abordado en el avion con el ID: {idAvion}";
 		}
 
 		[HttpGet("MostrarPasajerosAbordoEnAvion")]
@@ -163,7 +166,7 @@ namespace TorreDeControl.Controllers
 			avion.Estatus = NuevoEstatus;
 			cn.SaveChanges();
 
-			return "Avion actualizado";
+			return $"El avion con el ID:{idAvion} ahora esta en {NuevoEstatus} ";
 		}
 
 		

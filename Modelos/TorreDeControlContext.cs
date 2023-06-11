@@ -41,30 +41,34 @@ public partial class TorreDeControlContext : DbContext
 
         modelBuilder.Entity<Avione>(entity =>
         {
-            entity.HasKey(e => e.IdAvion).HasName("PK__Aviones__76AC44A9CD5BDF4F");
+            entity.HasKey(e => e.IdAvion).HasName("PK__Aviones__76AC44A9C1907292");
 
             entity.Property(e => e.IdAvion).HasColumnName("Id_Avion");
-            entity.Property(e => e.AeropuertoEntrada)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("aeropuerto_entrada");
-            entity.Property(e => e.AeropuertoSalida)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("aeropuerto_salida");
             entity.Property(e => e.Estatus)
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("estatus");
             entity.Property(e => e.HoraAterrizaje).HasColumnName("hora_aterrizaje");
             entity.Property(e => e.HoraSalida).HasColumnName("hora_salida");
+            entity.Property(e => e.IdAeropuertoAterrizaje).HasColumnName("IdAeropuerto_aterrizaje");
+            entity.Property(e => e.IdAeropuertoSalida).HasColumnName("IdAeropuerto_salida");
             entity.Property(e => e.LimitePasajeros).HasColumnName("limite_pasajeros");
             entity.Property(e => e.LimitePesoKg).HasColumnName("limite_peso_kg");
+
+            entity.HasOne(d => d.IdAeropuertoAterrizajeNavigation).WithMany(p => p.AvioneIdAeropuertoAterrizajeNavigations)
+                .HasForeignKey(d => d.IdAeropuertoAterrizaje)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Aviones__IdAerop__797309D9");
+
+            entity.HasOne(d => d.IdAeropuertoSalidaNavigation).WithMany(p => p.AvioneIdAeropuertoSalidaNavigations)
+                .HasForeignKey(d => d.IdAeropuertoSalida)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Aviones__IdAerop__787EE5A0");
         });
 
         modelBuilder.Entity<Pasajero>(entity =>
         {
-            entity.HasKey(e => e.IdPasajero).HasName("PK__Pasajero__31162C46E388882B");
+            entity.HasKey(e => e.IdPasajero).HasName("PK__Pasajero__31162C4663C616A2");
 
             entity.Property(e => e.IdPasajero).HasColumnName("Id_Pasajero");
             entity.Property(e => e.IdAvion).HasColumnName("id_Avion");
@@ -76,7 +80,8 @@ public partial class TorreDeControlContext : DbContext
 
             entity.HasOne(d => d.IdAvionNavigation).WithMany(p => p.Pasajeros)
                 .HasForeignKey(d => d.IdAvion)
-                .HasConstraintName("FK__Pasajeros__id_Av__3E52440B");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Pasajeros__id_Av__7F2BE32F");
         });
 
         OnModelCreatingPartial(modelBuilder);

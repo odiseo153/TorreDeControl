@@ -7,6 +7,7 @@ namespace TorreDeControl.Controllers
 {
 	public class AvionCRUDController : Controller
 	{
+		
 		private static TorreDeControlContext cn;
 		private Encontrar encontrador = new Encontrar();
 
@@ -26,8 +27,33 @@ namespace TorreDeControl.Controllers
 		public dynamic Agregar(Avione avio)
 		{
 			var _avion = (from avion in cn.Aviones
-						 where avion.HoraSalida == avio.HoraSalida && avion.AeropuertoEntrada == avio.AeropuertoEntrada
+						 where avion.HoraSalida == avio.HoraSalida && avion.IdAeropuertoAterrizaje == avio.IdAeropuertoAterrizaje
 						 select avion).FirstOrDefault();
+
+			var limiteAeropuertoAterrizaje =(from a in cn.Aeropuertos where a.IdAeropuerto == avio.IdAeropuertoAterrizaje select a.LimiteAviones).Sum();
+			var limiteAeropuertoSalida = (from a in cn.Aeropuertos where a.IdAeropuerto == avio.IdAeropuertoSalida select a.LimiteAviones).Sum();
+
+			var avionesA = (from a in cn.Aviones where a.IdAeropuertoAterrizaje == avio.IdAeropuertoAterrizaje select a).Count();
+			var avionesB = (from a in cn.Aviones where a.IdAeropuertoSalida == avio.IdAeropuertoSalida select a).Count();
+
+
+			if (avionesA+1 >= limiteAeropuertoAterrizaje)
+			{
+				return $"El aeropuerto con el ID: {avio.IdAeropuertoAterrizaje} no puede tener mas aviones a llegado a su limite";
+			}
+			else if (avionesA + 1 >= limiteAeropuertoSalida) 
+			{
+				return $"El aeropuerto con el ID: {avio.IdAeropuertoSalida} no puede tener mas aviones a llegado a su limite";
+			}
+
+			if (avionesB + 1 >= limiteAeropuertoAterrizaje)
+			{
+				return $"El aeropuerto con el ID: {avio.IdAeropuertoAterrizaje} no puede tener mas aviones a llegado a su limite";
+			}
+			else if (avionesB + 1 >= limiteAeropuertoSalida)
+			{
+				return $"El aeropuerto con el ID: {avio.IdAeropuertoSalida} no puede tener mas aviones a llegado a su limite";
+			}
 
 			if (_avion != null)
 			{
@@ -58,8 +84,8 @@ namespace TorreDeControl.Controllers
 			{
 				if (item.IdAvion == avionId)
 				{
-					item.AeropuertoEntrada = avions.AeropuertoEntrada == null ? item.AeropuertoEntrada: avions.AeropuertoEntrada;
-					item.AeropuertoSalida = avions.AeropuertoSalida == null ? item.AeropuertoSalida : avions.AeropuertoSalida;
+					item.IdAeropuertoAterrizaje = avions.IdAeropuertoAterrizaje == null ? item.IdAeropuertoAterrizaje : avions.IdAeropuertoAterrizaje;
+					item.IdAeropuertoSalida = avions.IdAeropuertoSalida == null ? item.IdAeropuertoSalida : avions.IdAeropuertoSalida;
 					item.HoraAterrizaje = avions.HoraAterrizaje == null ? item.HoraAterrizaje : avions.HoraAterrizaje;
 					item.HoraSalida = avions.HoraSalida == null ? item.HoraSalida : avions.HoraSalida;
 					item.Estatus = avions.Estatus == null ? item.Estatus : avions.Estatus;
@@ -72,7 +98,7 @@ namespace TorreDeControl.Controllers
 						message = $"El avion con el Id:{avionId} fue Actualizado",
 						Cambios=item
 					};
-					//cn.SaveChanges();
+					cn.SaveChanges();
 				}
 			}
 
@@ -91,9 +117,9 @@ namespace TorreDeControl.Controllers
 				return mensaje;
 			}
 
-			var avion = cn.Aviones.ToList();
+			var avion = cn.Aviones;
 
-			foreach (var item in avion)
+			foreach (var item in avion.ToList())
 			{
 				if (item.IdAvion == idAvion)
 				{
@@ -106,5 +132,6 @@ namespace TorreDeControl.Controllers
 
 			return mensaje;
 		}
+		
 	}
 }
