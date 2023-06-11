@@ -5,8 +5,11 @@ Phone number:2022-0204
 
 Api de aviones hecha en C# con entityFramework y usando SQL SERVER para la administracion de los datos
 
-esta api fue desarrollada siguiendo los siguientes requerimientos:
+//////////////////////////////////////////////////////////////////////////////////////
 
+Esta api fue desarrollada siguiendo los siguientes requerimientos:
+
+//////
 1- Utilizar una base de datos local para el almacenamiento de 
 informaciones.
 Crear siguientes endpoints sobre aviones (agregar, eliminar, obtener).
